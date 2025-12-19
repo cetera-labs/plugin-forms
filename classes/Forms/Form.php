@@ -615,7 +615,7 @@ class Form extends \Cetera\DbObject
             case 'server.alias':
                 return $app->getServer()->fields['alias'] ?? "";
             default:
-                $_REQUEST[$matches[1]] ?? = "";
+                $_REQUEST[$matches[1]] ??= "";
                 if (is_array($_REQUEST[$matches[1]])) {
                     return implode(', ', $_REQUEST[$matches[1]]);
                 } else {
