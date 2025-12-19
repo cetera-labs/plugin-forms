@@ -609,12 +609,13 @@ class Form extends \Cetera\DbObject
         // Поиск констант и параметров формы
         switch ($matches[1]) {
             case 'server.name':
-                return $app->getServer()->fields['name'];
+                return $app->getServer()->fields['name'] ?? "";
             case 'server.url':
                 return $_SERVER['HTTP_HOST'];
             case 'server.alias':
-                return $app->getServer()->fields['alias'];
+                return $app->getServer()->fields['alias'] ?? "";
             default:
+                $_REQUEST[$matches[1]] ?? = "";
                 if (is_array($_REQUEST[$matches[1]])) {
                     return implode(', ', $_REQUEST[$matches[1]]);
                 } else {
