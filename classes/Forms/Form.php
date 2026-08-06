@@ -360,6 +360,10 @@ class Form extends \Cetera\DbObject
         foreach ($arFields as $field) {
             preg_match_all('/\[(.*)(\*?) (.*)\]/isU', $field[0], $arFieldInfo, PREG_SET_ORDER);
 
+            if (!isset($arFieldInfo[0])) {
+                continue; // служебные теги без пробела внутри скобок, напр. [formresult][formerror]
+            }
+
             $fieldType = $arFieldInfo[0][1];
             $fieldName = self::getFieldName($arFieldInfo[0][3]);
 
@@ -539,6 +543,7 @@ class Form extends \Cetera\DbObject
      */
     public static function sendMail($data, $mailHtml, $attachments = [])
     {
+        \PHPMailer\PHPMailer\PHPMailer::$validator = 'html5';
         $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
         if ($mailHtml) {
             $mail->ContentType = 'text/html';
@@ -611,7 +616,7 @@ class Form extends \Cetera\DbObject
             case 'server.name':
                 return $app->getServer()->fields['name'] ?? "";
             case 'server.url':
-                return $_SERVER['HTTP_HOST'];
+                return preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
             case 'server.alias':
                 return $app->getServer()->fields['alias'] ?? "";
             default:
